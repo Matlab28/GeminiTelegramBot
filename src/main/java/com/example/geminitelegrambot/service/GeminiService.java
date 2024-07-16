@@ -34,7 +34,8 @@ public class GeminiService {
     public RootRequestDto getUpdateService() {
         RootRequestDto updates = telegramApiClient.getUpdates(0L);
         Integer updateId = updates.getResult().get(updates.getResult().size() - 1).getUpdateId();
-        log.info("Message got from - " + updates.getResult().get(0).getMessage().getFrom().getFirstName());
+        log.info("Message got from - " + updates.getResult().get(0).getMessage().getFrom().getFirstName() +
+                ", ID - " + updates.getResult().get(0).getMessage().getChat().getId());
         return telegramApiClient.getUpdates(Long.valueOf(updateId));
     }
 
@@ -44,6 +45,7 @@ public class GeminiService {
         if (updates.getCandidates() != null) {
             for (Candidate candidate : updates.getCandidates()) {
                 String text = candidate.getContent().getParts().get(0).getText();
+                text = text.replace("*", "");
                 textBuilder.append(text).append("\n\n");
             }
         }
